@@ -80,8 +80,9 @@ int main()
     Model ourModel5("Models/cycle/raptor.obj");
     */
 
-    GameObject bag("dfwedews");
-    bag.modelpath = "Models/bag_model/backpack.obj";
+    string str = "Models/bag_model/backpack.obj";
+    GameObject bag(str);
+    //bag.modelpath = "Models/bag_model/backpack.obj";
 
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -112,7 +113,7 @@ int main()
         ourShader.setMat4("view", view);
 
 
-        bag.draw();
+        bag.draw(ourShader);
         /*
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f)); // translate it right

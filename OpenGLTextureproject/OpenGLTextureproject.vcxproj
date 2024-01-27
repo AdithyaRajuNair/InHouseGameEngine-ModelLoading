@@ -144,12 +144,12 @@
     <ClInclude Include="..\..\..\..\Downloads\stb_image.h" />
     <ClInclude Include="..\..\TestOpenGL\Include\Shader_s.h" />
     <ClInclude Include="..\Include\Camera.h" />
+    <ClInclude Include="..\Include\GameObj.h" />
     <ClInclude Include="..\Include\Mesh.h" />
     <ClInclude Include="..\Include\Model.h" />
     <ClInclude Include="glm-0.9.8.5\glm\glm\glm.hpp" />
     <ClInclude Include="glm-0.9.8.5\glm\glm\gtc\matrix_transform.hpp" />
     <ClInclude Include="glm-0.9.8.5\glm\glm\gtc\type_ptr.hpp" />
-    <ClInclude Include="GameObj.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\..\..\Downloads\plane.png" />

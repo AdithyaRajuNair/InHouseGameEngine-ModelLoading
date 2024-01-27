@@ -59,7 +59,7 @@
     <ClInclude Include="..\Include\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameObj.h">
+    <ClInclude Include="..\Include\GameObj.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
