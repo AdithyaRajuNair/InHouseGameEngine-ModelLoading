@@ -15,21 +15,18 @@ using namespace std;
 class GameObject
 {
 public: 
-	string path;
-	unsigned int shaderID;
 	glm::mat4 GOmodelmat = glm::mat4(1.f);
 	glm::vec3 tvecm;
 	float scalem = 1.0f;
 	glm::vec3 svecm;
-	glm::vec3 rvecm;
-	
+	glm::vec3 rvecm;	
 	float anglem;
 	Model ourModel;
 	GameObject()
 	{
 
 	}
-	GameObject(const std::string& modelpath, bool fliptextures) : path(modelpath)
+	GameObject(const std::string& modelpath, bool fliptextures)
 	{
 		stbi_set_flip_vertically_on_load(fliptextures);
 		ourModel = modelpath;
