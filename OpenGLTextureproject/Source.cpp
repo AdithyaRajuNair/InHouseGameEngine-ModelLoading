@@ -4,6 +4,7 @@
 #include <glm/glm/glm.hpp>
 #include <glm/glm/gtc/matrix_transform.hpp>
 #include <glm/glm/gtc/type_ptr.hpp>
+#include <glm/glm/ext.hpp>
 
 #include <Shader_s.h>
 #include <Camera.h>
@@ -11,13 +12,18 @@
 #include <GameObj.h>
 
 #include <stb_image.h>
-
+#include <vector>
 #include <iostream>
+char keyOnce[GLFW_KEY_LAST + 1];
+#define glfwGetKeyOnce(WINDOW, KEY)				\
+	(glfwGetKey(WINDOW, KEY) ?				\
+	 (keyOnce[KEY] ? false : (keyOnce[KEY] = true)) :	\
+	 (keyOnce[KEY] = false))
 
 void framebuffersizecallback(GLFWwindow* window, int width, int height);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window);
+void processInput(GLFWwindow* window, GameObject gameobjarray[], int SelObj);
 
 // settings
 const unsigned int SCR_WIDTH = 1920;
@@ -27,6 +33,12 @@ float rval = 0.0f;
 float gval = 0.6f;
 float bval = 0.75f;
 float alphaval = 0.00;
+float ymodel = 0.0f;
+float angle = 0.0f;
+int selectedGameObj = 0;
+glm::vec3 tvec = glm::vec3(0.0f, 0.0f, 0.0f);
+glm::vec3 svec = glm::vec3(1.0f, 1.0f, 1.0f);
+glm::vec3 rvec = glm::vec3(0.0f, 1.0f, 0.0f);
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -80,13 +92,27 @@ int main()
     Model ourModel5("Models/cycle/raptor.obj");
     */
 
-    string str = "Models/bag_model/backpack.obj";
-    GameObject bag(str);
+    GameObject bag("Models/bag_model/backpack.obj", true);
+    GameObject cup("Models/cup/cup.obj", false);
+    GameObject skull("Models/basecharacter/brideskull.obj", false);
+
+    GameObject GameObjArray[] = {bag,cup,skull};
+
+    for (int i = 0; i < sizeof(GameObjArray) / sizeof(GameObject); i++)
+    {
+        GameObjArray[i].tvecm = tvec;
+        GameObjArray[i].svecm = svec;
+        GameObjArray[i].rvecm = rvec;
+        GameObjArray[i].anglem = angle;
+    }
+
     //bag.modelpath = "Models/bag_model/backpack.obj";
 
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // render loop
+    
+
     while (!glfwWindowShouldClose(window))
     {
 
@@ -94,7 +120,7 @@ int main()
         deltaTime = currFrame - lastFrame;
         lastFrame = currFrame;
 
-        processInput(window);
+        processInput(window, GameObjArray, selectedGameObj);
 
         // render
         glClearColor(rval, gval, bval, 1.0f);
@@ -112,8 +138,12 @@ int main()
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
-
-        bag.draw(ourShader);
+        for (int i = 0; i<sizeof(GameObjArray)/sizeof(GameObject); i++)
+        {
+            GameObjArray[i].transform(ourShader);
+            GameObjArray[i].draw(ourShader);
+        }
+        //bag.draw(ourShader);
         /*
         glm::mat4 model = glm::mat4(1.f);
         model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f)); // translate it right
@@ -161,17 +191,33 @@ int main()
     return 0;
 }
 
-void processInput(GLFWwindow* window) {
+void processInput(GLFWwindow* window, GameObject gameobjarray[], int SelObj)
+{
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, 1); }
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { alphaval = alphaval + 0.001f; }
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { alphaval = alphaval - 0.001f; }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)  camera.ProcessKeyboard(FORWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)  camera.ProcessKeyboard(BACKWARD, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)  camera.ProcessKeyboard(RIGHT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)  camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)  camera.ProcessKeyboard(UP, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)  camera.ProcessKeyboard(DOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[1] = gameobjarray[SelObj].tvecm[1] + 0.03f; }
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[1] = gameobjarray[SelObj].tvecm[1] - 0.03f; }
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[0] = gameobjarray[SelObj].tvecm[0] + 0.03f; }
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[0] = gameobjarray[SelObj].tvecm[0] - 0.03f; }
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[2] = gameobjarray[SelObj].tvecm[2] + 0.03f; }
+    if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[2] = gameobjarray[SelObj].tvecm[2] - 0.03f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].anglem = gameobjarray[SelObj].anglem + 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].anglem = gameobjarray[SelObj].anglem - 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].scalem = gameobjarray[SelObj].scalem + 0.01f; }
+    if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].scalem = gameobjarray[SelObj].scalem - 0.01f; }
+    if (glfwGetKeyOnce(window, GLFW_KEY_N) == GLFW_PRESS)
+    {
+        selectedGameObj++;
+        if (selectedGameObj == 3) selectedGameObj = 0;
+    }
 }
+
+
 
 void framebuffersizecallback(GLFWwindow* window, int width, int height)
 {
