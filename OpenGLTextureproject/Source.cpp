@@ -30,15 +30,10 @@ const unsigned int SCR_WIDTH = 1920;
 const unsigned int SCR_HEIGHT = 1080;
 
 float rval = 0.0f;
-float gval = 0.6f;
-float bval = 0.75f;
-float alphaval = 0.00;
-float ymodel = 0.0f;
-float angle = 0.0f;
+float gval = 0.0f;
+float bval = 0.0f;
+
 int selectedGameObj = 0;
-glm::vec3 tvec = glm::vec3(0.0f, 0.0f, 0.0f);
-glm::vec3 svec = glm::vec3(1.0f, 1.0f, 1.0f);
-glm::vec3 rvec = glm::vec3(0.0f, 1.0f, 0.0f);
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
@@ -97,17 +92,6 @@ int main()
     GameObject skull("Models/basecharacter/brideskull.obj", false);
 
     GameObject GameObjArray[] = {bag,cup,skull};
-
-    for (int i = 0; i < sizeof(GameObjArray) / sizeof(GameObject); i++)
-    {
-        GameObjArray[i].tvecm = tvec;
-        GameObjArray[i].svecm = svec;
-        GameObjArray[i].rvecm = rvec;
-        GameObjArray[i].anglem = angle;
-    }
-
-    //bag.modelpath = "Models/bag_model/backpack.obj";
-
 
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     // render loop

@@ -16,11 +16,11 @@ class GameObject
 {
 public: 
 	glm::mat4 GOmodelmat = glm::mat4(1.f);
-	glm::vec3 tvecm;
+	glm::vec3 tvecm = glm::vec3(0.0f, 0.0f, 0.0f);
 	float scalem = 1.0f;
-	glm::vec3 svecm;
-	glm::vec3 rvecm;	
-	float anglem;
+	glm::vec3 svecm = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 rvecm = glm::vec3(0.0f, 1.0f, 0.0f);
+	float anglem = 0.0f;
 	Model ourModel;
 	GameObject()
 	{
