@@ -126,8 +126,6 @@ int main()
         glClearColor(rval, gval, bval, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-
         // render container
 
         ourShader.use();
@@ -143,42 +141,6 @@ int main()
             GameObjArray[i].transform(ourShader);
             GameObjArray[i].draw(ourShader);
         }
-        //bag.draw(ourShader);
-        /*
-        glm::mat4 model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f)); // translate it right
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-        ourShader.setMat4("model", model);
-        ourModel1.Draw(ourShader);
-
-        model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 0.0f)); // translate it left
-        model = glm::scale(model, glm::vec3(5.0f, 5.0f, 5.0f));	// it's a bit too small for our scene, so scale it up
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ourShader.setMat4("model", model);
-        ourModel2.Draw(ourShader);
-
-        model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(-3.0f, 0.0f, 0.0f)); // translate it left
-        model = glm::scale(model, glm::vec3(2.0f, 2.0f, 2.0f));	// it's a bit too small for our scene, so scale it up
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        ourShader.setMat4("model", model);
-        ourModel3.Draw(ourShader);
-
-        model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(5.0f, 0.0f, 0.0f)); // translate it left
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too small for our scene, so scale it up
-        //model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ourShader.setMat4("model", model);
-        ourModel4.Draw(ourShader);
-
-        model = glm::mat4(1.f);
-        model = glm::translate(model, glm::vec3(-5.0f, 0.0f, 0.0f)); // translate it left
-        model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too small for our scene, so scale it up
-        //model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-        ourShader.setMat4("model", model);
-        ourModel5.Draw(ourShader);
-        */
 
         
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
