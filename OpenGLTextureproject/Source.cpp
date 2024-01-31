@@ -14,6 +14,7 @@
 #include <stb_image.h>
 #include <vector>
 #include <iostream>
+
 char keyOnce[GLFW_KEY_LAST + 1];
 #define glfwGetKeyOnce(WINDOW, KEY)				\
 	(glfwGetKey(WINDOW, KEY) ?				\
@@ -23,7 +24,7 @@ char keyOnce[GLFW_KEY_LAST + 1];
 void framebuffersizecallback(GLFWwindow* window, int width, int height);
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);
-void processInput(GLFWwindow* window, GameObject gameobjarray[], int SelObj);
+void processInput(GLFWwindow* window, int GOAsize, GameObject gameobjarray[], int SelObj);
 
 // settings
 const unsigned int SCR_WIDTH = 1920;
@@ -104,7 +105,7 @@ int main()
         deltaTime = currFrame - lastFrame;
         lastFrame = currFrame;
 
-        processInput(window, GameObjArray, selectedGameObj);
+        processInput(window, sizeof(GameObjArray) / sizeof(GameObject), GameObjArray, selectedGameObj);
 
         // render
         glClearColor(rval, gval, bval, 1.0f);
@@ -120,6 +121,7 @@ int main()
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
 
+        //cout << sizeof(GameObjArray) << " " << sizeof(GameObject) << endl;
         for (int i = 0; i<sizeof(GameObjArray)/sizeof(GameObject); i++)
         {
             GameObjArray[i].transform(ourShader);
@@ -137,7 +139,7 @@ int main()
     return 0;
 }
 
-void processInput(GLFWwindow* window, GameObject gameobjarray[], int SelObj)
+void processInput(GLFWwindow* window, int GOAsize, GameObject gameobjarray[], int SelObj)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) { glfwSetWindowShouldClose(window, 1); }
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)  camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -152,14 +154,18 @@ void processInput(GLFWwindow* window, GameObject gameobjarray[], int SelObj)
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[0] = gameobjarray[SelObj].tvecm[0] - 0.03f; }
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[2] = gameobjarray[SelObj].tvecm[2] + 0.03f; }
     if (glfwGetKey(window, GLFW_KEY_T) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS) { gameobjarray[SelObj].tvecm[2] = gameobjarray[SelObj].tvecm[2] - 0.03f; }
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].anglem = gameobjarray[SelObj].anglem + 1.0f; }
-    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].anglem = gameobjarray[SelObj].anglem - 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].xaxisanglem = gameobjarray[SelObj].xaxisanglem + 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].xaxisanglem = gameobjarray[SelObj].xaxisanglem - 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].yaxisanglem = gameobjarray[SelObj].yaxisanglem + 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_Y) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].yaxisanglem = gameobjarray[SelObj].yaxisanglem - 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].zaxisanglem = gameobjarray[SelObj].zaxisanglem + 1.0f; }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].zaxisanglem = gameobjarray[SelObj].zaxisanglem - 1.0f; }
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { gameobjarray[SelObj].scalem = gameobjarray[SelObj].scalem + 0.01f; }
     if (glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS and glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) { gameobjarray[SelObj].scalem = gameobjarray[SelObj].scalem - 0.01f; }
     if (glfwGetKeyOnce(window, GLFW_KEY_N) == GLFW_PRESS)
     {
         selectedGameObj++;
-        if (selectedGameObj == 3) selectedGameObj = 0;
+        if (selectedGameObj >= GOAsize) selectedGameObj = 0;
     }
 }
 
